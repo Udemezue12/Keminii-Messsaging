@@ -1,0 +1,27 @@
+validateAndExtractClaims(token).ifPresentOrElse(
+    claims -> {
+        // Token is valid! Use your data safely here
+        String userId = claims.getSubject();
+
+        // Extract the role from the custom claims (adjust the claim key if needed)
+        String role = claims.get("role", String.class);
+
+        // Extract JTI for blacklist check
+        String jti = claims.getId();
+
+        if (!blacklistService.isBlacklisted(jti)) {
+            var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+            var authToken = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } else {
+            // Handle blacklisted token (optional: clear context if it's already set)
+            SecurityContextHolder.clearContext();
+        }
+    },
+    () -> {
+        // Token is invalid or expired! Handle unauthorized error
+        SecurityContextHolder.clearContext();
+        // (Optional: response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");)
+    }
+);

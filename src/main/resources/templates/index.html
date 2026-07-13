@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemini Messaging API... Encrypted, real-time, in transit</title>
+    <meta name="description" content="Kemini is a free, public WebSocket API for encrypted real-time messaging. Fast, reliable, secure. Test it locally on port 8989.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="noise-overlay" aria-hidden="true"></div>
+
+<header class="site-header">
+    <div class="wrap header-inner">
+        <a href="#top" class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">KEMINI</span>
+        </a>
+        <nav class="main-nav" aria-label="Primary">
+            <a href="#features">Features</a>
+            <a href="#quickstart">Quickstart</a>
+            <a href="#console">Try it live</a>
+            <a href="#docs">API reference</a>
+        </nav>
+        <a class="btn btn-ghost header-cta" href="swagger-ui/index.html?urls.primaryName=public" target="_blank" rel="noopener">
+            Open API reference
+        </a>
+    </div>
+</header>
+
+<main id="top">
+
+    <!-- HERO -->
+    <section class="hero wrap">
+        <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Free &amp; public — status: transmitting</p>
+            <h1>Messages, sealed before they leave the socket.</h1>
+            <p class="hero-sub">
+                Kemini is a live messaging API built on WebSockets. Every frame is encrypted end to end,
+                delivery is near-instant, and the connection holds even when networks don't cooperate.
+                No API key, no billing,connect and start sending.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#quickstart">Connect in 3 steps</a>
+                <a class="btn btn-outline" href="swagger-ui/index.html?urls.primaryName=public" target="_blank" rel="noopener">
+                    Read the API reference
+                </a>
+            </div>
+            <div class="hero-endpoint">
+                <span class="hero-endpoint-label">Local test endpoint</span>
+                <code>ws://localhost:8989</code>
+                <button class="copy-btn" type="button" data-copy="ws://localhost:8989" aria-label="Copy endpoint">Copy</button>
+            </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="frame-scope">
+                <div class="frame-scope-head">
+                    <span>FRAME INSPECTOR</span>
+                    <span class="frame-scope-status">LIVE</span>
+                </div>
+                <svg class="frame-wave" viewBox="0 0 460 120" preserveAspectRatio="none">
+                    <polyline class="wave-path wave-path--ghost" points="0,60 20,60 35,20 50,100 65,60 460,60"></polyline>
+                    <polyline class="wave-path wave-path--main" points="0,60 20,60 35,20 50,100 65,60 460,60"></polyline>
+                </svg>
+                <div class="frame-fields">
+                    <div class="frame-field">
+                        <span class="frame-field-key">op</span>
+                        <span class="frame-field-val" data-cycle="op">0x1 TEXT</span>
+                    </div>
+                    <div class="frame-field">
+                        <span class="frame-field-key">mask</span>
+                        <span class="frame-field-val" data-cycle="mask">true</span>
+                    </div>
+                    <div class="frame-field">
+                        <span class="frame-field-key">payload</span>
+                        <span class="frame-field-val frame-field-val--cipher" data-cycle="payload">8f3c…e21a</span>
+                    </div>
+                    <div class="frame-field">
+                        <span class="frame-field-key">state</span>
+                        <span class="frame-field-val" data-cycle="state">DECRYPTING</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="features wrap">
+        <h2 class="section-title">Built for messages that can't wait — or leak</h2>
+        <p class="section-sub">Four properties, held at once, on every connection.</p>
+
+        <div class="feature-grid">
+            <article class="feature-card">
+                <div class="feature-glyph feature-glyph--lock" aria-hidden="true">
+                    <svg viewBox="0 0 40 40"><path d="M12 18V13a8 8 0 0 1 16 0v5" fill="none" stroke="currentColor" stroke-width="2.4"/><rect x="8" y="18" width="24" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="26" r="2.2" fill="currentColor"/></svg>
+                </div>
+                <h3>Encrypted</h3>
+                <p>Every frame is encrypted before it leaves the client. Kemini never stores or logs plaintext message bodies.</p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-glyph feature-glyph--bolt" aria-hidden="true">
+                    <svg viewBox="0 0 40 40"><path d="M21 4 8 24h9l-2 12 15-20h-9l2-12Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>
+                </div>
+                <h3>Fast</h3>
+                <p>A persistent WebSocket connection skips the handshake overhead of request-response APIs, so messages arrive as they happen.</p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-glyph feature-glyph--pulse" aria-hidden="true">
+                    <svg viewBox="0 0 40 40"><path d="M4 20h7l3-10 6 20 3-10h13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <h3>Reliable</h3>
+                <p>Dropped connections reconnect automatically, and undelivered frames are queued so a flaky network doesn't cost you a message.</p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-glyph feature-glyph--shield" aria-hidden="true">
+                    <svg viewBox="0 0 40 40"><path d="M20 4 6 10v9c0 9 6 15 14 17 8-2 14-8 14-17v-9L20 4Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 20l4 4 8-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <h3>Secured</h3>
+                <p>Origin checks, message signing, and per-connection rate limits run underneath the socket, without adding a step to your code.</p>
+            </article>
+
+            <article class="feature-card feature-card--wide">
+                <div class="feature-glyph feature-glyph--open" aria-hidden="true">
+                    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 4c4 4 6 9 6 16s-2 12-6 16M20 4c-4 4-6 9-6 16s2 12 6 16M4 20h32" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+                </div>
+                <h3>Free and public</h3>
+                <p>No signup, no API key, no rate card. Kemini is open for testing and building — the only thing to configure is where you connect from.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- QUICKSTART -->
+    <section id="quickstart" class="quickstart">
+        <div class="wrap">
+            <h2 class="section-title">Connect from localhost</h2>
+            <p class="section-sub">Kemini's public test socket is reachable on your own machine at port 8989. Three steps, one socket.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-num">01</span>
+                    <div>
+                        <h3>Open the socket</h3>
+                        <p>Point a WebSocket client at <code>ws://localhost:8989</code>. No headers or credentials required.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-num">02</span>
+                    <div>
+                        <h3>Send a frame</h3>
+                        <p>Write a message to the socket. Kemini encrypts it in transit and echoes a delivery receipt.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-num">03</span>
+                    <div>
+                        <h3>Listen for messages</h3>
+                        <p>Incoming frames are decrypted and handed to your <code>onmessage</code> handler as plain text.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-block-head">
+                    <span>connect.js</span>
+                    <button class="copy-btn" type="button" data-copy-target="quickstart-code">Copy</button>
+                </div>
+                <pre id="quickstart-code"><code><span class="tok-kw">const</span> socket = <span class="tok-kw">new</span> <span class="tok-fn">WebSocket</span>(<span class="tok-str">"ws://localhost:8989"</span>);
+
+socket.<span class="tok-fn">onopen</span> = () => {
+  socket.<span class="tok-fn">send</span>(<span class="tok-fn">JSON</span>.<span class="tok-fn">stringify</span>({
+    type: <span class="tok-str">"message"</span>,
+    body: <span class="tok-str">"hello, kemini"</span>
+  }));
+};
+
+socket.<span class="tok-fn">onmessage</span> = (event) => {
+  <span class="tok-fn">console</span>.<span class="tok-fn">log</span>(<span class="tok-str">"received:"</span>, event.data);
+};</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE CONSOLE DEMO -->
+    <section id="console" class="console-section wrap">
+        <h2 class="section-title">Watch a frame travel</h2>
+        <p class="section-sub">A simulated view of what happens on the wire between two clients on <code>ws://localhost:8989</code>. Run your own client locally to see it for real.</p>
+
+        <div class="console">
+            <div class="console-head">
+                <div class="console-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                <span class="console-title">kemini — simulated session</span>
+                <span class="console-status" id="console-status">connecting…</span>
+            </div>
+            <div class="console-body" id="console-log" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <!-- DOCS CTA -->
+    <section id="docs" class="docs-cta">
+        <div class="wrap docs-cta-inner">
+            <div>
+                <h2 class="section-title">Every endpoint, documented</h2>
+                <p class="section-sub">Message schemas, connection lifecycle events, and error codes — all in the interactive API reference.</p>
+            </div>
+            <a class="btn btn-primary btn-large" href="swagger-ui/index.html?urls.primaryName=public" target="_blank" rel="noopener">
+                Open the Swagger reference
+                <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="wrap footer-inner">
+        <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">KEMINI</span>
+        </div>
+        <p class="footer-note">Free public API for encrypted live messaging. Test socket: <code>ws://localhost:8989</code></p>
+        <a href="swagger-ui/index.html?urls.primaryName=public" target="_blank" rel="noopener">API reference ↗</a>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

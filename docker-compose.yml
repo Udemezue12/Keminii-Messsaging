@@ -1,0 +1,200 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb
+
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+    volumes:
+      - mongo_data:/data/db
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "db.adminCommand('ping').ok"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mongo-express:
+    image: mongo-express:latest
+
+    container_name: mongo-express
+
+    restart: unless-stopped
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+    ports:
+      - "8082:8081"
+
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+
+  redis:
+    image: redis:7-alpine
+
+    container_name: redis
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    build:
+      context: ./docker/rabbitmq
+
+    container_name: rabbitmq
+
+    hostname: rabbitmq
+
+    restart: unless-stopped
+
+    ports:
+      - "5672:5672"
+      - "61613:61613"
+      - "15672:15672"
+
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_VHOST: /
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  secure-chat-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: secure-chat-api
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+      rabbitmq:
+        condition: service_healthy
+
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+
+    environment:
+      ##################################
+      ## MongoDB
+      ##################################
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/chat_app?authSource=admin
+
+      ##################################
+      ## Redis
+      ##################################
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+      REDIS_USERNAME:
+      REDIS_PASSWORD:
+
+      ##################################
+      ## JWT
+      ##################################
+      SECRET_KEY: your-secret-key
+      EXPIRATION: 86400
+
+      ##################################
+      ## RabbitMQ
+      ##################################
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: password
+
+      ##################################
+      ## Payment
+      ##################################
+      PAYSTACK_SECRET_KEY: xxxxxxxxx
+      FLUTTERWAVE_SECRET_KEY: xxxxxxxxx
+      STRIPE_SECRET_KEY: xxxxxxxxx
+      STRIPE_WEBHOOK_SECRET_KEY: xxxxxxxxx
+
+      ##################################
+      ## Email
+      ##################################
+      BREVO_API_KEY: xxxxxxxxx
+      EMAIL_USERNAME: xxxxxxxxx
+      EMAIL_PASSWORD: xxxxxxxxx
+      EMAIL_PORT: 587
+
+      ##################################
+      ## SMS
+      ##################################
+      TERMII_BASE_URL: xxxxxxxxx
+      TERMII_API_KEY: xxxxxxxxx
+      TERMII_SENDER_ID: xxxxxxxxx
+
+      ##################################
+      ## Frontend
+      ##################################
+      FRONTEND_URL: http://localhost:5173
+      CORS_ALLOWED_ORIGINS: http://localhost:5173
+
+      ##################################
+      ## Password Reset
+      ##################################
+      RESET_PASSWORD_SALT: xxxxxxxxx
+      RESET_SECRET_KEY: xxxxxxxxx
+
+      ##################################
+      ## Email Verification
+      ##################################
+      VERIFY_EMAIL_SALT: xxxxxxxxx
+      VERIFY_EMAIL_SECRET_KEY: xxxxxxxxx
+
+volumes:
+  mongo_data:
+  redis_data:
+  rabbitmq_data:

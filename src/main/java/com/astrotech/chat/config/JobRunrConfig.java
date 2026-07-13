@@ -29,18 +29,7 @@ public class JobRunrConfig {
         return new MongoDBStorageProvider(mongoClient, databaseName);
     }
 
-    //    @Bean
-//    public JobScheduler jobScheduler(StorageProvider storageProvider, ApplicationContext applicationContext) {
-//        return JobRunr.configure()
-//                .useStorageProvider(storageProvider)
-//                .useJobActivator(applicationContext::getBean)
-//                .useBackgroundJobServer()
-//                .useDashboard()
-//                .initialize()
-//                .getJobScheduler();
-//
-//
-//    }
+
     @Bean
     public JobScheduler jobScheduler(StorageProvider storageProvider, ApplicationContext applicationContext) {
         return JobRunr.configure()
@@ -48,7 +37,7 @@ public class JobRunrConfig {
                 .useJobActivator(applicationContext::getBean)
                 .withJobFilter(deleteOnSuccessFilter)
                 .useBackgroundJobServer()
-                .useDashboard()
+//                .useDashboard()
                 .initialize()
                 .getJobScheduler();
     }

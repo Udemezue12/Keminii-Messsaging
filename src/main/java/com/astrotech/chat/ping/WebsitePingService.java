@@ -37,7 +37,7 @@ public class WebsitePingService {
                     .toBodilessEntity();
 
             var duration = System.currentTimeMillis() - start;
-            log.error("Ping Success for {}", url);
+            log.info("Ping Success for {}", url);
 
             return new PingResult(
                     uri.toString(),

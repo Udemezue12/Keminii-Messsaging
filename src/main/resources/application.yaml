@@ -29,6 +29,9 @@ spring:
       port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
+      timeout: 5s
+  cache:
+    type: redis
     mongodb:
       database: ${MONGODB_DATABASE}
       uri: ${MONGODB_URL}

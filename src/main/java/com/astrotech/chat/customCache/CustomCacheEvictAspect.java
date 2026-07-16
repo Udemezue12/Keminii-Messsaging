@@ -10,6 +10,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -85,34 +86,38 @@ public class CustomCacheEvictAspect {
         }
 
         for (String cacheName : evict.cacheNames()) {
+            try {
 
-            Cache cache = cacheManager.getCache(cacheName);
+                var cache = cacheManager.getCache(cacheName);
 
-            if (cache == null) {
-                log.warn("Cache '{}' not found.", cacheName);
-                continue;
-            }
+                if (cache == null) {
+                    log.warn("Cache '{}' not found.", cacheName);
+                    continue;
+                }
 
-            if (evict.allEntries()) {
+                if (evict.allEntries()) {
 
-                log.debug("Clearing cache '{}'", cacheName);
+                    log.debug("Clearing cache '{}'", cacheName);
 
-                cache.clear();
+                    cache.clear();
 
-                continue;
-            }
+                    continue;
+                }
 
-            for (String keyExpression : evict.keys()) {
+                for (String keyExpression : evict.keys()) {
 
-                var key = resolveExpression(keyExpression, context);
+                    var key = resolveExpression(keyExpression, context);
 
-                log.debug(
-                        "Evicting cache '{}' key '{}'",
-                        cacheName,
-                        key
-                );
+                    log.debug(
+                            "Evicting cache '{}' key '{}'",
+                            cacheName,
+                            key
+                    );
 
-                cache.evict(key);
+                    cache.evict(key);
+                }
+            } catch (DataAccessException ex) {
+                log.warn("Failed to evict cache '{}'", cacheName, ex);
             }
         }
     }

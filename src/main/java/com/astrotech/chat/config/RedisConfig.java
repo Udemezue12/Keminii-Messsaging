@@ -50,7 +50,7 @@ public class RedisConfig {
                 .build();
         var clientConfig = LettuceClientConfiguration.builder()
                 .clientOptions(clientOptions)
-                .commandTimeout(Duration.ofSeconds(12))
+                .commandTimeout(Duration.ofSeconds(5))
                 .shutdownTimeout(Duration.ZERO)
 //                .useSsl()
                 .build();

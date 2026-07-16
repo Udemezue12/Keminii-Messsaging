@@ -30,13 +30,14 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
       timeout: 5s
-  cache:
-    type: redis
+
     mongodb:
       database: ${MONGODB_DATABASE}
       uri: ${MONGODB_URL}
       uuid-representation: standard
       auto-index-creation: false
+  cache:
+    type: redis
 server:
   port: 8080
 logging:

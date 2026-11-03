@@ -4,13 +4,14 @@ import com.astrotech.chat.core.TrimWhiteSpace;
 import com.astrotech.chat.dto.request.UserRequest;
 import com.astrotech.chat.dto.response.UserResponse;
 import com.astrotech.chat.entites.User;
+import com.astrotech.chat.enums.UserRole;
 import com.astrotech.chat.enums.UserStatus;
 
 import java.time.Instant;
 
 
 public class UserMapper {
-    public static User create(UserRequest request){
+    public static User create(UserRequest request, UserRole role){
         var email = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.email(), false);
         var nickName = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.nickName(), false);
         var displayName = TrimWhiteSpace.trimWhiteSpace(request.nickName());
@@ -18,7 +19,7 @@ public class UserMapper {
                 .nickName(nickName)
                 .email(email)
                 .fullName(request.fullName())
-                .role(request.role())
+                .role(role)
                 .displayName(displayName)
                 .verified(false)
                 .password(request.password())

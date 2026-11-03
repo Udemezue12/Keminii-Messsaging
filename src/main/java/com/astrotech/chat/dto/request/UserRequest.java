@@ -7,8 +7,7 @@ import jakarta.validation.constraints.*;
 
 
 public record UserRequest(
-        @NotBlank(message = "Name is required") @Size(min = 10, max = 255, message = "Fullname must be more than ten characters") String fullName,
-        @NotNull(message = "Role is required") UserRole role,
+        @NotBlank(message = "Name is required") @Size(min = 10, max = 255, message = "Full Name must be more than ten characters") String fullName,
         @NotBlank(message = "Nick Name is required") @Size(min = 5, max = 255, message = "Nickname must be more than five characters")
         String nickName,
 

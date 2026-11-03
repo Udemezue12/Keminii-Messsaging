@@ -11,7 +11,7 @@ public class UUIDValidator implements ConstraintValidator<ValidUUID, String> {
     public boolean isValid(String value, ConstraintValidatorContext context) {
 
         if (value == null || value.isBlank()) {
-            // Let @NotNull / @NotBlank handle this
+
             return true;
         }
 

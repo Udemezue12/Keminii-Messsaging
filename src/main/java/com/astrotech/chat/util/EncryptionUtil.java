@@ -3,7 +3,6 @@ package com.astrotech.chat.util;
 import com.astrotech.chat.configProperties.EncryptionProperties;
 import com.astrotech.chat.core.GetSecretKey;
 import com.astrotech.chat.dto.response.EncryptedData;
-import com.astrotech.chat.entites.Message;
 import com.astrotech.chat.exceptions.BadRequestException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

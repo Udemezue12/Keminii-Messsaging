@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 public @interface EmailVerified {
     String message() default
             "Email verification required.";
-    boolean allowAdmins() default true;
+    boolean allowAdmins() default false;
 }

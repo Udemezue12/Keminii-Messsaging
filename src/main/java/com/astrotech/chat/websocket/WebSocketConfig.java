@@ -55,7 +55,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
 
-        messageConverters.add(0, jackson2MessageConverter);
+        messageConverters.addFirst(jackson2MessageConverter);
 
        
         return false;
@@ -147,4 +147,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 queueCapacity(400).
                 keepAliveSeconds(40);
     }
+
 }

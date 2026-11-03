@@ -12,6 +12,7 @@ import com.astrotech.chat.dto.response.AccessTokenResponse;
 import com.astrotech.chat.dto.response.RefreshTokenResponse;
 import com.astrotech.chat.dto.response.UserResponse;
 import com.astrotech.chat.enums.JwtType;
+import com.astrotech.chat.enums.UserRole;
 import com.astrotech.chat.exceptions.BadRequestException;
 import com.astrotech.chat.exceptions.ResourceNotFoundException;
 import com.astrotech.chat.jwt.Jwt;
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,27 +66,19 @@ public class AuthService {
 
 
     @Transactional
-    public ResponseEntity<ApiResponse<UserResponse>> register(UserRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> user_register(UserRequest request) {
 
-        var email = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.email(), false);
-        var nickName = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.nickName(), false);
-
-
-        requestValidator.throwIfTrue(
-                userRepository.findProjectionByEmail(email).isPresent(),
-                "Email already exists");
-        requestValidator.throwIfTrue(userRepository.findProjectionByNickName(nickName).isPresent(), "Nickname already exists");
-        requestValidator.throwIfTrue(userRepository.findProjectionByPhoneNumber(request.phoneNumber()).isPresent(), "PhoneNumber already exists");
-        var user = UserMapper.create(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        var savedUser = userRepository.save(user);
-        var userDto = UserMapper.response(savedUser);
-        if (userDto.email() != null) {
-            resendVerificationEmail(savedUser.getEmail());
-        }
-        return ApiResponseBuilder.success("Registered successfully! Please click the link in your email or enter the OTP sent to your phone and email to verify your account.", null);
+        return createUser(request, UserRole.USER);
 
     }
+    @Transactional
+    public ResponseEntity<ApiResponse<UserResponse>> admin_register(UserRequest request) {
+
+        return createUser(request, UserRole.ADMIN);
+
+    }
+
+
 
     public ResponseEntity<ApiResponse<AccessTokenResponse>> login(HttpServletResponse response, LoginRequest request, HttpServletRequest servletRequest) {
         var email = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.email(), false);
@@ -408,5 +402,24 @@ public class AuthService {
     private String getClientIp(HttpServletRequest req) {
         String xff = req.getHeader("X-Forwarded-For");
         return xff != null ? xff.split(",")[0].trim() : req.getRemoteAddr();
+    }
+    private @NonNull ResponseEntity<ApiResponse<UserResponse>> createUser(UserRequest request, UserRole role) {
+        var email = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.email(), false);
+        var nickName = TrimWhiteSpace.trimWhiteSpaceWithUpperCase(request.nickName(), false);
+
+
+        requestValidator.throwIfTrue(
+                userRepository.findProjectionByEmail(email).isPresent(),
+                "Email already exists");
+        requestValidator.throwIfTrue(userRepository.findProjectionByNickName(nickName).isPresent(), "Nickname already exists");
+        requestValidator.throwIfTrue(userRepository.findProjectionByPhoneNumber(request.phoneNumber()).isPresent(), "PhoneNumber already exists");
+        var user = UserMapper.create(request, role);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        var savedUser = userRepository.save(user);
+        var userDto = UserMapper.response(savedUser);
+        if (userDto.email() != null) {
+            resendVerificationEmail(savedUser.getEmail());
+        }
+        return ApiResponseBuilder.success("Registered successfully! Please click the link in your email or enter the OTP sent to your phone and email to verify your account.", null);
     }
 }

@@ -118,6 +118,7 @@ public class SecurityConfig {
                         .csrfTokenRequestHandler(csrfTokenRequestHandler)
                         .ignoringRequestMatchers(
                                 "/api/v1/auth/**",
+                                "/api/v1/jobs/**",
                                 "/ws",
                                 "/ws/**",
                                 "/ws/native",
@@ -139,6 +140,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**",
                                 "/ws/**",
                                 "/v3/api-docs",
+                                "/api/v1/jobs/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",

@@ -7,6 +7,7 @@ import com.astrotech.chat.dto.response.UserResponse;
 import com.astrotech.chat.ratelimit.redisRatelimit.Ratelimit;
 import com.astrotech.chat.responseBuilder.ApiResponse;
 import com.astrotech.chat.service.AuthService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +28,13 @@ public class AuthController {
     @PostMapping("/register")
     @Ratelimit
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody UserRequest userRequest) {
-        return authService.register(userRequest);
+        return authService.user_register(userRequest);
+    }
+    @PostMapping("/admin/register/user")
+    @Ratelimit
+    @Hidden
+    public ResponseEntity<ApiResponse<UserResponse>> admin_register(@Valid @RequestBody UserRequest userRequest) {
+        return authService.admin_register(userRequest);
     }
 
     @PostMapping("/login")
